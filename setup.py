@@ -11,7 +11,7 @@ setup(
     version="0.1",
     description="A PyQt5 useful widgets.",
     # The project's main homepage.
-    url="https://github.com/m1ch3al/mma845x_accelerometer.git",
+    url="https://github.com/m1ch3al/pyqt5-widgets.git",
     # Author details
     author="Renato Sirola",
     author_email="renato.sirola@gmail.com",
