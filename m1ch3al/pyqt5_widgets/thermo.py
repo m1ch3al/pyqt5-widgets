@@ -42,14 +42,15 @@ class _InnerThermometer(QWidget):
             thermo_height = self._thermo_rect.height()
             one_pixels_step = float(thermo_height) / self.steps
             if self.min_value >= 0:
-                value_to_pixel = abs(self.min_value - self._value_to_draw) * one_pixels_step
+                value_to_pixel = (thermo_height * self._value_to_draw) / (self.max_value + self.min_value)
             else:
-                if self._value_to_draw < 0:
-                    value_to_pixel = (abs(self.min_value) - abs(self._value_to_draw)) * one_pixels_step
+                if self.max_value >= 0:
+                    ratio = one_pixels_step / ((abs(self.min_value) + abs(self.max_value)) / self.steps)
+                    value_to_pixel = (abs(self.min_value) + self._value_to_draw) * ratio
                 else:
-                    value_to_pixel = (abs(self.min_value) + self._value_to_draw) * one_pixels_step
+                    ratio = one_pixels_step / ((abs(self.min_value) + self.max_value) / self.steps)
+                    value_to_pixel = ratio * (abs(self.min_value) + self._value_to_draw)
 
-            print("{}       {}".format(self._value_to_draw, value_to_pixel))
             painter = QtGui.QPainter(self)
             brush = QtGui.QBrush()
             brush.setColor(self._orange)
@@ -159,3 +160,15 @@ class Thermometer(QWidget):
         self._thermo.set_value(value)
         self._thermo.update()
 
+
+import sys
+def main():
+    app = QApplication(sys.argv)
+    thermo = Thermometer(min_value=-20, max_value=20, steps=10)
+    thermo.show()
+    thermo.set_value(12)
+    sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    main()
