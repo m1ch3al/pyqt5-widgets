@@ -30,6 +30,7 @@ class _InnerThermometer(QWidget):
     def paintEvent(self, e):
         painter = QtGui.QPainter(self)
         self._lower_padding = painter.device().height() + self._lower_padding_offset
+        painter.end()
         self._draw_scale(e)
         self._draw_thermo(e)
         self._draw_value(e)
@@ -39,7 +40,16 @@ class _InnerThermometer(QWidget):
             return
         else:
             thermo_height = self._thermo_rect.height()
-            value_to_pixel = int((float(thermo_height) / self.max_value) * self._value_to_draw)
+            one_pixels_step = float(thermo_height) / self.steps
+            if self.min_value >= 0:
+                value_to_pixel = abs(self.min_value - self._value_to_draw) * one_pixels_step
+            else:
+                if self._value_to_draw < 0:
+                    value_to_pixel = (abs(self.min_value) - abs(self._value_to_draw)) * one_pixels_step
+                else:
+                    value_to_pixel = (abs(self.min_value) + self._value_to_draw) * one_pixels_step
+
+            print("{}       {}".format(self._value_to_draw, value_to_pixel))
             painter = QtGui.QPainter(self)
             brush = QtGui.QBrush()
             brush.setColor(self._orange)
@@ -85,7 +95,7 @@ class _InnerThermometer(QWidget):
             painter.drawLine(line)
             rect = QtCore.QRect(self._left_padding - 70, horizontal_x - 8, self._left_padding - 35,
                                 self._lower_padding)
-            painter.drawText(rect, Qt.AlignRight, "{}".format(current_value))
+            painter.drawText(rect, Qt.AlignRight, "{}".format(round(current_value, 2)))
             horizontal_x += step_length
             current_value -= step_length_value
         painter.end()
