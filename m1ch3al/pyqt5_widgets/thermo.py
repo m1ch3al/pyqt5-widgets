@@ -125,26 +125,27 @@ class Thermometer(QWidget):
     def set_min_value(self, new_min_value):
         self._min_value = new_min_value
         self._thermo.min_value = self._min_value
-        self._thermo.repaint()
+        self._thermo.update()
 
     def set_max_value(self, new_max_value):
         self._max_value = new_max_value
         self._thermo.max_value = self._max_value
-        self._thermo.repaint()
+        self._thermo.update()
 
     def set_steps(self, new_steps_value):
         self._steps = new_steps_value
         self._thermo.steps = self._steps
-        self._thermo.repaint()
+        self._thermo.update()
 
     def set_value(self, value):
         if value <= self._min_value:
             self._thermo.set_value(self._min_value)
-            self._thermo.repaint()
+            self._thermo.update()
             return
         if value >= self._max_value:
             self._thermo.set_value(self._max_value)
-            self._thermo.repaint()
+            self._thermo.update()
             return
         self._thermo.set_value(value)
-        self._thermo.repaint()
+        self._thermo.update()
+
